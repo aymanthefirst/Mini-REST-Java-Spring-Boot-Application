@@ -1,0 +1,4 @@
+Customer Ref,Customer Name,Address Line 1,Address Line 2,Town,County,Country,Postcode
+CUST001,John Doe,123 Elm Street,Apartment 4,Anytown,Anystate,USA,12345
+CUST002,Jane Smith,456 Oak Avenue,,Smallville,Anystate,USA,67890
+CUST003,Bob Johnson,789 Pine Road,Suite 1,Bigtown,Anystate,USA,10111
