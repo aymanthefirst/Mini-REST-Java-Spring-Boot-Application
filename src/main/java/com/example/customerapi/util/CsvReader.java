@@ -1,74 +1,62 @@
 package com.example.customerapi.util;
 
 import com.example.customerapi.model.Customer;
-import com.example.customerapi.util.CsvReader;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.StringReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+/**
+ * CsvReader class for parsing CSV files into Customer objects.
+ */
+@Component
+public class CsvReader {
 
-public class CsvReaderTest {
+    /**
+     * Parses a CSV file from a BufferedReader and returns a list of Customer objects.
+     *
+     * @param reader The BufferedReader for the CSV file.
+     * @return A list of Customer objects.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<Customer> parseCsvFile(BufferedReader reader) throws IOException {
+        List<Customer> customers = new ArrayList<>();
+        String line;
+        boolean headerProcessed = false;
 
-    private CsvReader csvReader;
-
-    @BeforeEach
-    public void setUp() {
-        csvReader = new CsvReader();
-    }
-
-    @Test
-    public void testParseCsvFile_Success() throws IOException {
-        String csvData = "Ref,Name,Address1,Address2,Town,County,Country,Postcode\n" +
-                "C001,John Doe,123 Street,Apartment,New York,NY,USA,10001\n" +
-                "C002,Jane Doe,456 Avenue,Suite,Los Angeles,CA,USA,90001";
-
-        BufferedReader reader = new BufferedReader(new StringReader(csvData));
-        List<Customer> customers = csvReader.parseCsvFile(reader);
-
-        assertNotNull(customers, "Parsed customer list should not be null");
-        assertEquals(2, customers.size(), "There should be 2 customers in the list");
-
-        Customer firstCustomer = customers.get(0);
-        assertEquals("C001", firstCustomer.getCustomerRef());
-        assertEquals("John Doe", firstCustomer.getCustomerName());
-        // ... other assertions for firstCustomer
-
-        Customer secondCustomer = customers.get(1);
-        assertEquals("C002", secondCustomer.getCustomerRef());
-        // ... other assertions for secondCustomer
-    }
-
-    @Test
-    public void testParseCsvFile_EmptyFile() throws IOException {
-        String csvData = "Ref,Name,Address1,Address2,Town,County,Country,Postcode\n";
-
-        BufferedReader reader = new BufferedReader(new StringReader(csvData));
-        List<Customer> customers = csvReader.parseCsvFile(reader);
-
-        assertTrue(customers.isEmpty(), "Customer list should be empty for an empty CSV file");
-    }
-
-    @Test
-    public void testParseCsvFile_MalformedFile() {
-        String csvData = "Ref,Name,Address1\n" +
-                "C001,John Doe,123 Street";
-
-        BufferedReader reader = new BufferedReader(new StringReader(csvData));
-        IOException exception = null;
-
-        try {
-            csvReader.parseCsvFile(reader);
-        } catch (IOException e) {
-            exception = e;
+        while ((line = reader.readLine()) != null) {
+            if (!headerProcessed) {
+                // Skip the header line
+                headerProcessed = true;
+                continue;
+            }
+            String[] data = line.split(",");
+            Customer customer = parseCustomerData(data);
+            customers.add(customer);
         }
 
-        assertNotNull(exception, "An IOException should be thrown for a malformed CSV file");
+        return customers;
+    }
+
+    /**
+     * Converts an array of strings (CSV row) into a Customer object.
+     *
+     * @param data The array of strings representing a row in the CSV.
+     * @return A Customer object.
+     */
+    private Customer parseCustomerData(String[] data) {
+        Customer customer = new Customer();
+        customer.setCustomerRef(data[0]);
+        customer.setCustomerName(data[1]);
+        customer.setAddressLine1(data[2]);
+        customer.setAddressLine2(data[3]);
+        customer.setTown(data[4]);
+        customer.setCounty(data[5]);
+        customer.setCountry(data[6]);
+        customer.setPostcode(data[7]);
+        return customer;
     }
 }

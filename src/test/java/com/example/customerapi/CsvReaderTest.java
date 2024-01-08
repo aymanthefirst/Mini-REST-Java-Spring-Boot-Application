@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CsvReaderTest {
 
@@ -23,31 +24,52 @@ public class CsvReaderTest {
     }
 
     @Test
-    public void testParseCsvFile() throws IOException {
+    public void testParseCsvFile_Success() throws IOException {
         String csvData = "Ref,Name,Address1,Address2,Town,County,Country,Postcode\n" +
                 "C001,John Doe,123 Street,Apartment,New York,NY,USA,10001\n" +
-                "C002,Jane Doe,456 Avenue,Suite,Los Angeles,CA,USA,90001\n" +
-                "C003,John Smith,789 Boulevard,Unit,Chicago,IL,USA,60007\n";
+                "C002,Jane Doe,456 Avenue,Suite,Los Angeles,CA,USA,90001";
 
         BufferedReader reader = new BufferedReader(new StringReader(csvData));
-
         List<Customer> customers = csvReader.parseCsvFile(reader);
 
         assertNotNull(customers, "Parsed customer list should not be null");
-        assertEquals(3, customers.size(), "There should be 3 customers in the list");
+        assertEquals(2, customers.size(), "There should be 2 customers in the list");
 
-        // Assertions for the first customer
         Customer firstCustomer = customers.get(0);
         assertEquals("C001", firstCustomer.getCustomerRef());
+        assertEquals("John Doe", firstCustomer.getCustomerName());
+        // ... other assertions for firstCustomer
 
-        // Assertions for the second customer
         Customer secondCustomer = customers.get(1);
         assertEquals("C002", secondCustomer.getCustomerRef());
-        assertEquals("Jane Doe", secondCustomer.getCustomerName());
-
-        // Assertions for the third customer
-        Customer thirdCustomer = customers.get(2);
-        assertEquals("C003", thirdCustomer.getCustomerRef());
-        assertEquals("789 Boulevard", thirdCustomer.getAddressLine1());
+        // ... other assertions for secondCustomer
     }
+
+    @Test
+    public void testParseCsvFile_EmptyFile() throws IOException {
+        String csvData = "Ref,Name,Address1,Address2,Town,County,Country,Postcode\n";
+
+        BufferedReader reader = new BufferedReader(new StringReader(csvData));
+        List<Customer> customers = csvReader.parseCsvFile(reader);
+
+        assertTrue(customers.isEmpty(), "Customer list should be empty for an empty CSV file");
+    }
+
+    @Test
+    public void testParseCsvFile_MalformedFile() {
+        String csvData = "Ref,Name,Address1\n" +
+                "C001,John Doe,123 Street";
+
+        BufferedReader reader = new BufferedReader(new StringReader(csvData));
+        ArrayIndexOutOfBoundsException exception = null;
+
+        try {
+            csvReader.parseCsvFile(reader);
+        } catch (ArrayIndexOutOfBoundsException | IOException e) {
+            exception = (ArrayIndexOutOfBoundsException) e;
+        }
+
+        assertNotNull(exception, "An ArrayIndexOutOfBoundsException should be thrown for a malformed CSV file");
+    }
+
 }

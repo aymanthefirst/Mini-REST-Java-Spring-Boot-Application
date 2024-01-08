@@ -23,6 +23,9 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(String c001, String johnDoe, String s, String apartment, String newYork, String ny, String usa, String number) {
+    }
+
     // Getters and setters
     public String getCustomerRef() {
         return customerRef;
