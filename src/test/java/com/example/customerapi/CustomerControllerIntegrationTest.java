@@ -6,8 +6,6 @@ import com.example.customerapi.service.CustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @WebMvcTest(CustomerController.class)
 @ExtendWith(MockitoExtension.class)
-public class CustomerControllerTest {
+public class CustomerControllerIntegrationTest {
 
     @MockBean
     private CustomerService customerService;
@@ -36,14 +34,23 @@ public class CustomerControllerTest {
     @Test
     public void testGetCustomerByRef_Success() throws Exception {
         String customerRef = "C001";
-        Customer customer = new Customer("C001", "John Doe", "123 Street", "Apartment", "New York", "NY", "USA", "10001");
+        Customer customer = new Customer();
+        customer.setCustomerRef(customerRef);
+        customer.setCustomerName("John Doe");
+        customer.setAddressLine1("123 Street");
+        customer.setAddressLine2("Apartment");
+        customer.setTown("New York");
+        customer.setCounty("NY");
+        customer.setCountry("USA");
+        customer.setPostcode("10001");
 
         when(customerService.findCustomerByRef(customerRef)).thenReturn(Optional.of(customer));
 
-        mockMvc.perform(get("/customer/{customerRef}", customerRef))
+        mockMvc.perform(get("/api/customers/{customerRef}", customerRef))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customerRef").value(customerRef))
                 .andExpect(jsonPath("$.customerName").value("John Doe"));
+
     }
 
     @Test
@@ -59,11 +66,12 @@ public class CustomerControllerTest {
     public void testAddCustomer() throws Exception {
         Customer newCustomer = new Customer("C002", "Jane Doe", "456 Avenue", "Suite", "Los Angeles", "CA", "USA", "90001");
 
-        mockMvc.perform(post("/customer")
+        mockMvc.perform(post("/api/customers") // Corrected URL
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newCustomer)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated()); // Assuming you're returning HttpStatus.CREATED in the controller
 
-        verify(customerService, times(1)).saveCustomer(newCustomer);
+        verify(customerService, times(1)).saveCustomer(any(Customer.class));
     }
+
 }

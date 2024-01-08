@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class CsvUploaderTest {
+public class CsvReaderIntegrationTest {
 
     @Autowired
     private CustomerRepository customerRepository;
