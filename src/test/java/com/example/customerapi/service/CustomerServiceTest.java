@@ -41,9 +41,12 @@ public class CustomerServiceTest {
         foundCustomer = customerRepository.findById("CUST003").orElse(null);
         assertThat(foundCustomer).isNotNull();
         assertThat(foundCustomer.getCustomerName()).isEqualTo("Bob Johnson");
+
+        customerRepository.deleteById("CUST001");
+        customerRepository.deleteById("CUST002");
+        customerRepository.deleteById("CUST003");
     }
 
-    //    make sure that CUST003 is not jimmy johnson to comfirm above tests are not just passing either way
     @Test
     public void comfirmingThatTestsWork(){
         Customer foundCustomer = customerRepository.findById("CUST003").orElse(null);
