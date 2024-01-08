@@ -4,10 +4,12 @@ import com.example.customerapi.model.Customer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CsvReader {
 
     public List<Customer> parseCsvFile(Reader reader) throws Exception {

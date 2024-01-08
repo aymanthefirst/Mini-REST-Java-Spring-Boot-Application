@@ -6,9 +6,7 @@ import com.example.customerapi.util.CsvReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -45,6 +43,22 @@ public class CustomerController {
             return new ResponseEntity<>("File uploaded and data saved successfully!", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * GET endpoint to retrieve a customer by their reference.
+     *
+     * @param customerRef The reference of the customer
+     * @return The customer details or an appropriate response if not found
+     */
+    @GetMapping("/customer/{customerRef}")
+    public ResponseEntity<Customer> getCustomerByRef(@PathVariable String customerRef) {
+        Customer customer = customerService.findCustomerByRef(customerRef);
+        if (customer != null) {
+            return ResponseEntity.ok(customer);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
