@@ -8,46 +8,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "customers")
 public class Customer {
+
     @Id
-    @Column(name = "customer_ref", nullable = false)
     private String customerRef;
-
-    @Column(name = "customer_name")
     private String customerName;
-
-    @Column(name = "address_line1")
     private String addressLine1;
-
-    @Column(name = "address_line2")
     private String addressLine2;
-
-    @Column(name = "town")
     private String town;
-
-    @Column(name = "county")
     private String county;
-
-    @Column(name = "country")
     private String country;
-
-    @Column(name = "postcode")
     private String postcode;
 
-    // Default constructor is required by JPA
+    // Constructors
     public Customer() {
     }
 
-    public Customer(String customerRef, String customerName, String addressLine1, String addressLine2, String town, String county, String country, String postcode) {
-        this.customerRef = customerRef;
-        this.customerName = customerName;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.town = town;
-        this.county = county;
-        this.country = country;
-        this.postcode = postcode;
-    }
-
+    // Getters and setters
     public String getCustomerRef() {
         return customerRef;
     }
@@ -111,4 +87,6 @@ public class Customer {
     public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
+
+    // Optional: Override toString(), equals(), and hashCode() methods as needed.
 }

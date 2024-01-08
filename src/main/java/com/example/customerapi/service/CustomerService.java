@@ -2,14 +2,11 @@ package com.example.customerapi.service;
 
 import com.example.customerapi.model.Customer;
 import com.example.customerapi.repository.CustomerRepository;
-import com.example.customerapi.util.CsvReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * CustomerService class for handling business logic related to Customer entities.
@@ -20,38 +17,33 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @Autowired
-    private CsvReader csvReader;
-
-    /**
-     * Method to load CSV data and save to the database after the bean initialization.
-     */
-    @PostConstruct
-    public void initDatabaseWithCsvData() {
-        String path = "C:/Users/Administrator.Ayman/Downloads/customerapi/customerapi/src/main/resources/customers.csv";
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(path))) {
-            List<Customer> customers = csvReader.parseCsvFile(fileReader);
-            saveAllCustomers(customers);
-            System.out.println("CSV data loaded into the database.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Saves a list of customers to the database.
      *
-     * @param customers the list of customers to be saved
+     * @param customers The list of customers to be saved.
      */
     public void saveAllCustomers(List<Customer> customers) {
         customerRepository.saveAll(customers);
     }
 
-    public void saveCustomer(Customer newCustomer) {
-        customerRepository.save(newCustomer);
+    /**
+     * Saves a single customer to the database.
+     *
+     * @param customer The customer to be saved.
+     */
+    public void saveCustomer(Customer customer) {
+        customerRepository.save(customer);
     }
 
-    public Customer findCustomerByRef(String customerRef) {
-        return customerRepository.findById(customerRef).orElse(null);
+    /**
+     * Finds a customer by their reference.
+     *
+     * @param customerRef The reference of the customer.
+     * @return An Optional containing the customer if found, or empty otherwise.
+     */
+    public Optional<Customer> findCustomerByRef(String customerRef) {
+        return customerRepository.findById(customerRef);
     }
+
+    // Add other business methods as required
 }
