@@ -11,7 +11,7 @@ I also did a quick manual check at the end of this phase to ensure that the data
 
 Sending Data to REST API
 Test Cases: Developed tests for sending JSON data to a REST API endpoint.
-Implementation: Implemented RestApiClient to convert Customer objects to JSON and send them to the specified REST API endpoint using RestTemplate.
+Implementation: Implemented RestApiClient to convert Customer objects to JSON and send them to the specified REST API endpoint.
 
 Reading and Parsing CSV Files
 Test Cases: Wrote unit tests for parsing CSV files to ensure that the file is read correctly and the contents are mapped to Java objects.
