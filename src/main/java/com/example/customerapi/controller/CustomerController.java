@@ -3,6 +3,7 @@ package com.example.customerapi.controller;
 import com.example.customerapi.model.Customer;
 import com.example.customerapi.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/customers")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
     @Autowired
-    private CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     /**
      * GET endpoint to retrieve a customer by their reference.
@@ -37,8 +42,8 @@ public class CustomerController {
      */
     @PostMapping
     public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
-        customerService.saveCustomer(customer);
-        return ResponseEntity.ok(customer);
+        Customer savedCustomer = customerService.saveCustomer(customer);
+        return new ResponseEntity<>(savedCustomer, HttpStatus.CREATED);
     }
 
     // Add other endpoints as required

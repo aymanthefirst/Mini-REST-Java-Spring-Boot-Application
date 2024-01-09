@@ -27,13 +27,15 @@ public class CustomerService {
     }
 
     /**
-     * Saves a single customer to the database.
+     * Saves a customer to the database.
      *
      * @param customer The customer to be saved.
+     * @return The saved customer.
      */
-    public void saveCustomer(Customer customer) {
-        customerRepository.save(customer);
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
+
 
     /**
      * Finds a customer by their reference.
